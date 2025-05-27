@@ -1,0 +1,5 @@
+# Use the official Node-RED image as source
+FROM nodered/node-red:4.0.9-22-minimal AS source
+
+# Use the source image to create a base image
+FROM source AS base

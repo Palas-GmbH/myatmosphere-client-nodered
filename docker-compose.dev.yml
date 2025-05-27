@@ -1,0 +1,8 @@
+services:
+  node-red-client:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: node-red-client:development
+    volumes:
+      - ./nodered-data:/data

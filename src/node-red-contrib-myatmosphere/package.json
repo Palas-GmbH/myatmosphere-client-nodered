@@ -1,0 +1,32 @@
+{
+  "name": "@palas/node-red-contrib-myatmosphere",
+  "version": "1.0.0",
+  "description": "A Node-Red node for subscribing to MyAtmosphere device latest measurements",
+  "main": "myatmosphere.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node-red",
+    "MyAtmosphere",
+    "air quality",
+    "environment",
+    "weather",
+    "air quality monitoring",
+    "environment monitoring",
+    "signalr",
+    "measurements",
+    "iot"
+  ],
+  "author": "Palas GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@microsoft/signalr": "8.0.7"
+  },
+  "node-red": {
+    "nodes": {
+      "myatmosphere-connection": "connection.js",
+      "myatmosphere-measurements": "measurements.js"
+    }
+  }
+}

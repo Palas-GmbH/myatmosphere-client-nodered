@@ -134,3 +134,14 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+
+
+# Node-RED
+.config.json
+.sessions.json
+*.backup
+*.bak
+
+nodered-data/flows_cred.json
+nodered-data/.config.json

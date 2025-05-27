@@ -1,0 +1,89 @@
+<script type="text/javascript">
+  RED.nodes.registerType("myatmosphere-measurements", {
+    category: "MyAtmosphere",
+    paletteLabel: "MyATMO Measurements",
+    color: "#0c9bc3",
+    defaults: {
+      connection: { value: "", type: "myatmosphere-connection" },
+      name: { value: "" },
+      serialNumbers: { value: "", required: true },
+      measurementTypes: { value: "" },
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: "myatmosphere-s.png",
+    label: function () {
+      return this.name || "MyATMO Measurements";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="myatmosphere-measurements">
+  <div class="form-row">
+    <label for="node-input-connection"
+      ><i class="fa fa-globe"></i> Connection</label
+    >
+    <input type="text" id="node-input-connection" placeholder="Connection" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-serialNumbers"
+      ><i class="fa fa-th-list"></i> Devices*</label
+    >
+    <input
+      type="text"
+      id="node-input-serialNumbers"
+      placeholder="comma,separated,serial,numbers"
+    />
+  </div>
+  <div class="form-row">
+    <label for="node-input-measurementTypes"
+      ><i class="icon-list"></i> Measurement Types</label
+    >
+    <input
+      type="text"
+      id="node-input-measurementTypes"
+      placeholder="comma,separated,types"
+    />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="myatmosphere-measurements">
+  <p>
+    Subscribes to real-time measurements for specified devices and measurement
+    types from MyAtmosphere API.
+  </p>
+
+  <p>Configure connection to MyAtmosphere:</p>
+  <ul>
+    <li><b>API Url</b>: The base URL of MyAtmosphere API</li>
+    <li>
+      <b>API Key</b>: The API key for authentication, use Private API key for
+      secure backend connection, like from Node-RED.
+    </li>
+  </ul>
+
+  <p>Configure measurements scope:</p>
+  <ul>
+    <li>
+      <b>Serial Numbers</b>: Comma-separated list of device serial numbers.
+    </li>
+    <li>
+      <b>Measurement Types</b>: Comma-separated list of measurement types. If
+      not set, all non-null values will be included in the response.
+    </li>
+  </ul>
+
+  <p>
+    See the
+    <a
+      href="https://my-atmosphere.cloud/measurements/network/api"
+      target="_blank"
+      >API documentation</a
+    >
+    for complete details.
+  </p>
+</script>

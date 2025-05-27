@@ -1,0 +1,53 @@
+<script type="text/javascript">
+  RED.nodes.registerType("myatmosphere-connection", {
+    category: "config",
+    defaults: {
+      name: { value: "" },
+      apiEndpoint: {
+        value: "https://api.my-atmosphere.cloud",
+        required: true,
+      },
+    },
+    credentials: {
+      apiKey: { type: "password", required: true },
+    },
+    label: function () {
+      return this.name ? this.name : "MyATMO Connection";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="myatmosphere-connection">
+  <div class="form-row">
+    <label for="node-config-input-apiEndpoint"
+      ><i class="fa fa-globe"></i> API Url*</label
+    >
+    <input
+      type="text"
+      id="node-config-input-apiEndpoint"
+      placeholder="https://api.my-atmosphere.cloud"
+    />
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-apiKey"
+      ><i class="fa fa-key"></i> API Key*</label
+    >
+    <input type="password" id="node-config-input-apiKey" />
+  </div>
+  <div class="form-tips">
+    A private API key should be generated for the AQ Network in the API section
+    <a
+      href="https://my-atmosphere.cloud/measurements/network/api"
+      target="_blank"
+      >MyAtmosphere website</a
+    >.
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input
+      type="text"
+      id="node-config-input-name"
+      placeholder="For example, the AQ Network of the key or the key name"
+    />
+  </div>
+</script>

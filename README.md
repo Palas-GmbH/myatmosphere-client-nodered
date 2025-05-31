@@ -1,2 +1,3 @@
-# mqtt-database-bridge
-Data Bridge for passing data between the MQTT server and the database.
+# @palas/node-red-myatmosphere
+
+A Node-RED node for subscribing to real-time device measurements from MyAtmosphere.

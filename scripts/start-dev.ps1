@@ -1,14 +1,14 @@
 # Activate Node.js from fnm
 fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression
 
-Push-Location ..\src\node-red-contrib-myatmosphere
+Push-Location ..\src\node-red-myatmosphere
 
 # Clean up old tgz files BEFORE packing
-Remove-Item palas-node-red-contrib-myatmosphere-*.tgz -ErrorAction SilentlyContinue
+Remove-Item palas-node-red-myatmosphere-*.tgz -ErrorAction SilentlyContinue
 
 npm pack
-$tgz = Get-ChildItem -Filter "palas-node-red-contrib-myatmosphere-*.tgz" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-Copy-Item $tgz.FullName -Destination "palas-node-red-contrib-myatmosphere-latest.tgz" -Force
+$tgz = Get-ChildItem -Filter "palas-node-red-myatmosphere-*.tgz" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+Copy-Item $tgz.FullName -Destination "palas-node-red-myatmosphere-latest.tgz" -Force
 Pop-Location
 
 # Remove any existing container

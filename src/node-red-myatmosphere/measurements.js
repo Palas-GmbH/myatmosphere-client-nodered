@@ -40,7 +40,7 @@ module.exports = function (RED) {
       for (const { serial, measurementTypes } of activeSubscriptions) {
         try {
           await connection.invoke(
-            "UnsubscribeFromDevice",
+            "DeviceUnsubscribe",
             serial,
             dataSet,
             measurementTypes
@@ -70,7 +70,7 @@ module.exports = function (RED) {
 
       const myAtmosphereMeasurementsHubUrl = `${
         node.connectionConfig?.apiEndpoint
-      }/hubs/measurements?access_token=Api-Key%20${encodeURIComponent(
+      }/streams/measurements?access_token=Api-Key%20${encodeURIComponent(
         node.connectionConfig?.apiKey
       )}`;
       const measurementTypesString =
@@ -115,9 +115,8 @@ module.exports = function (RED) {
         for (const serial of serialNumbers) {
           try {
             await connection.invoke(
-              "SubscribeToDevice",
+              `Device${dataSet}Subscribe`,
               serial,
-              dataSet,
               measurementTypes
             );
             node.log(

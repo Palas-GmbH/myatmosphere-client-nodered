@@ -1,5 +1,5 @@
 {
-  "name": "@palas/node-red-contrib-myatmosphere",
+  "name": "@palas/node-red-myatmosphere",
   "version": "1.0.0",
   "description": "A Node-Red node for subscribing to MyAtmosphere device latest measurements",
   "main": "myatmosphere.js",
@@ -20,6 +20,10 @@
   ],
   "author": "Palas GmbH",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Palas-GmbH/myatmosphere-client-nodered.git"
+  },
   "dependencies": {
     "@microsoft/signalr": "8.0.7"
   },

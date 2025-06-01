@@ -1,15 +1,15 @@
-# Node-Red MyAtmosphere Node
+# @palasde/node-red-myatmosphere - Node-Red MyAtmosphere Node
 
 ## Overview
 
-This project provides a Node-Red node `@palas/node-red-myatmosphere` for subscribing to the latest measurements from devices connected to MyAtmosphere. It allows users to easily integrate air quality and environmental data into their Node-Red workflows.
+This project provides a Node-Red node `@palasde/node-red-myatmosphere` for subscribing to the latest measurements from devices connected to MyAtmosphere. It allows users to easily integrate air quality and environmental data into their Node-Red workflows.
 
 ## Installation
 
 To install the Node-Red node, run the following command in your Node-Red user directory (typically `~/.node-red`):
 
 ```sh
-npm install @palas/node-red-myatmosphere
+npm install @palasde/node-red-myatmosphere
 ```
 
 ## Usage

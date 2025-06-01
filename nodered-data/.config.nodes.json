@@ -427,8 +427,8 @@
             }
         }
     },
-    "@palas/node-red-myatmosphere": {
-        "name": "@palas/node-red-myatmosphere",
+    "@palasde/node-red-myatmosphere": {
+        "name": "@palasde/node-red-myatmosphere",
         "version": "1.0.0",
         "local": false,
         "user": false,
@@ -441,8 +441,8 @@
                 "enabled": true,
                 "local": false,
                 "user": false,
-                "module": "@palas/node-red-myatmosphere",
-                "file": "/usr/src/node-red/node_modules/@palas/node-red-myatmosphere/connection.js"
+                "module": "@palasde/node-red-myatmosphere",
+                "file": "/usr/src/node-red/node_modules/@palasde/node-red-myatmosphere/connection.js"
             },
             "myatmosphere-measurements": {
                 "name": "myatmosphere-measurements",
@@ -452,8 +452,8 @@
                 "enabled": true,
                 "local": false,
                 "user": false,
-                "module": "@palas/node-red-myatmosphere",
-                "file": "/usr/src/node-red/node_modules/@palas/node-red-myatmosphere/measurements.js"
+                "module": "@palasde/node-red-myatmosphere",
+                "file": "/usr/src/node-red/node_modules/@palasde/node-red-myatmosphere/measurements.js"
             }
         }
     }

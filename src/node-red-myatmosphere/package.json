@@ -1,5 +1,5 @@
 {
-  "name": "@palas/node-red-myatmosphere",
+  "name": "@palasde/node-red-myatmosphere",
   "version": "1.0.0",
   "description": "A Node-Red node for subscribing to MyAtmosphere device latest measurements",
   "main": "myatmosphere.js",

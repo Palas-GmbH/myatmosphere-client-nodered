@@ -16,7 +16,7 @@ Push-Location $srcPath
 
 # Clean up old tgz files BEFORE packing
 Write-Host "Removing old package files..."
-Remove-Item "$distPath\palas-node-red-myatmosphere-*.tgz" -ErrorAction SilentlyContinue
+Remove-Item "$distPath\palasde-node-red-myatmosphere-*.tgz" -ErrorAction SilentlyContinue
 
 Write-Host "Packing npm package..."
 if (-not (npm pack --pack-destination $distPath)) {
@@ -25,10 +25,10 @@ if (-not (npm pack --pack-destination $distPath)) {
     exit 1
 }
 
-$tgz = Get-ChildItem -Path $distPath -Filter "palas-node-red-myatmosphere-*.tgz" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+$tgz = Get-ChildItem -Path $distPath -Filter "palasde-node-red-myatmosphere-*.tgz" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 if ($tgz) {
-    Copy-Item $tgz.FullName -Destination "$distPath\palas-node-red-myatmosphere-latest.tgz" -Force
-    Write-Host "Package copied to $distPath\palas-node-red-myatmosphere-latest.tgz"
+    Copy-Item $tgz.FullName -Destination "$distPath\palasde-node-red-myatmosphere-latest.tgz" -Force
+    Write-Host "Package copied to $distPath\palasde-node-red-myatmosphere-latest.tgz"
 }
 else {
     Write-Error "No package file found after packing."

@@ -22,7 +22,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Palas-GmbH/myatmosphere-client-nodered.git"
+    "url": "git+https://github.com/Palas-GmbH/myatmosphere-client-nodered.git"
   },
   "dependencies": {
     "@microsoft/signalr": "8.0.7"

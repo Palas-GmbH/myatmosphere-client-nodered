@@ -17,7 +17,7 @@
         "id": "a153064ab03a6bfa",
         "type": "debug",
         "z": "2c7706736b1f8701",
-        "name": "debug 1",
+        "name": "Measurement",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -26,8 +26,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 340,
-        "y": 80,
+        "x": 400,
+        "y": 180,
         "wires": []
     },
     {
@@ -36,7 +36,7 @@
         "z": "2c7706736b1f8701",
         "connection": "f2498bce81aca1be",
         "name": "",
-        "serialNumbers": "30000,40000",
+        "serialNumbers": "30000,40000,50000",
         "measurementTypes": "",
         "x": 130,
         "y": 140,
@@ -61,5 +61,37 @@
                 "a153064ab03a6bfa"
             ]
         ]
+    },
+    {
+        "id": "2cba168762630e7d",
+        "type": "catch",
+        "z": "2c7706736b1f8701",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 80,
+        "y": 300,
+        "wires": [
+            [
+                "0e3d9616e74d7c9d"
+            ]
+        ]
+    },
+    {
+        "id": "0e3d9616e74d7c9d",
+        "type": "debug",
+        "z": "2c7706736b1f8701",
+        "name": "Error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 270,
+        "y": 300,
+        "wires": []
     }
 ]

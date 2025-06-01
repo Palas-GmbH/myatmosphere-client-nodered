@@ -1,4 +1,4 @@
-# @palasde/node-red-myatmosphere - Node-Red MyAtmosphere Node
+# @palasde/node-red-myatmosphere
 
 ## Overview
 

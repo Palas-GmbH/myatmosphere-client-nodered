@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project provides a Node-Red node `@palasde/node-red-myatmosphere` for subscribing to the latest measurements from devices connected to MyAtmosphere. It allows users to easily integrate air quality and environmental data into their Node-Red workflows.
+This project provides a Node-Red node `@palasde/node-red-myatmosphere` for subscribing to the latest measurements from devices connected to [MyAtmosphere](https://my-atmosphere.net/) air quality monitoring system. It allows users to easily integrate air quality and environmental data into their Node-Red workflows.
 
 ## Installation
 

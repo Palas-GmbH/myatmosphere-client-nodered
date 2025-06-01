@@ -25,10 +25,6 @@ jobs:
         run: npm install
         working-directory: src/node-red-myatmosphere
 
-      - name: Build the package
-        run: npm run build
-        working-directory: src/node-red-myatmosphere
-
       - name: Publish to npm
         run: npm publish
         working-directory: src/node-red-myatmosphere

@@ -1,7 +1,7 @@
 <script type="text/javascript">
   RED.nodes.registerType("myatmosphere-measurements", {
     category: "environment",
-    paletteLabel: "MyAtmosphere Measurements",
+    paletteLabel: "myatmo measurement",
     color: "#0c9bc3",
     defaults: {
       connection: { value: "", type: "myatmosphere-connection" },
@@ -61,8 +61,21 @@
   <ul>
     <li><b>API Url</b>: The base URL of MyAtmosphere API</li>
     <li>
-      <b>API Key</b>: The API key for authentication, use Private API key for
-      secure backend connection, like from Node-RED.
+      <b>API Key</b>: The API key for authentication. Use a private API key
+      (obtained it at the end of the
+      <a
+        href="https://my-atmosphere.cloud/measurements/network/api"
+        target="_blank"
+      >
+        API documentation</a
+      >) for a secure connection. For public devices access, you can use a
+      public API key from the
+      <a
+        href="https://my-atmosphere.cloud/measurements/network/widgets"
+        target="_blank"
+        >widgets</a
+      >
+      section.
     </li>
   </ul>
 
@@ -96,14 +109,4 @@
     <li><b>device</b>: Device serial number.</li>
     <li><b>dataSet</b>: The constant name of the "Measurements" data set.</li>
   </ul>
-
-  <p>
-    See the
-    <a
-      href="https://my-atmosphere.cloud/measurements/network/api"
-      target="_blank"
-      >API documentation</a
-    >
-    for complete details and private API keys.
-  </p>
 </script>

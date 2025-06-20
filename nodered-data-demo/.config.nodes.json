@@ -429,7 +429,7 @@
     },
     "@palasde/node-red-myatmosphere": {
         "name": "@palasde/node-red-myatmosphere",
-        "version": "1.0.0",
+        "version": "1.1.2",
         "local": false,
         "user": false,
         "nodes": {

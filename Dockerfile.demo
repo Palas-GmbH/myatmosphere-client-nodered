@@ -2,7 +2,7 @@
 FROM nodered/node-red:4.0.9-22-minimal
 
 # Install your custom node globally
-RUN npm install @palasde/node-red-myatmosphere
+RUN npm install @palasde/node-red-myatmosphere@latest
 
 # Expose the default Node-Red port
 EXPOSE 1880

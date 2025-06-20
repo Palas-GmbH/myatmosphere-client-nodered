@@ -16,7 +16,7 @@ npm install @palasde/node-red-myatmosphere
 
 Once installed, you can find the MyAtmosphere nodes in the Node-RED palette. The following nodes are available:
 
-- **MyAtmosphere Measurements**: This node processes and outputs the latest measurements from the devices.
+- **myatmo measurement** (MyAtmosphere Measurements): This node processes and outputs the latest measurements from the devices.
 
 - **Connection**: This configuration node handles the connection to the MyAtmosphere API, and available from the other MyAtmosphere nodes. Usually set per AQ Network.
 
@@ -30,7 +30,7 @@ To configure the nodes, you will need to provide the connection details for your
 
 ## Output
 
-**MyAtmosphere Measurements** node emits the most recent measurement on initial connection and on every real-time update. Message content:
+**myatmo measurement** (MyAtmosphere Measurements) node emits the most recent measurement on initial connection and on every real-time update. Message content:
 
 - **payload**: The exact data contract for the measurement can be found in the [MyAtmosphere API docs](https://my-atmosphere.cloud/measurements/network/api) and related section of the [API explorer](https://api.my-atmosphere.cloud/streams).
 - **device**: Device serial number.
@@ -40,14 +40,18 @@ To configure the nodes, you will need to provide the connection details for your
 
 Here is an example of how to use the MyAtmosphere nodes in a Node-RED flow:
 
-1. Drag the **MyAtmosphere Measurements** node onto your workspace and configure it with your connection and device details.
-2. Use the output from the **MyAtmosphere Measurements** node to trigger other nodes in your flow, such as saving the data or sending alerts.
+1. Drag the **myatmo measurement** node onto your workspace and configure it with your connection and device details.
+2. Use the output from the **myatmo measurement** node to trigger other nodes in your flow, such as saving the data or sending alerts.
 
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file in the GitHub repository for more details.
 
 ## Changelog
+
+### [1.1.3] - 2025-06-21
+
+- Use short name `myatmo measurement` for palette label.
 
 ### [1.1.2] - 2025-06-20
 

@@ -1,7 +1,7 @@
 <script type="text/javascript">
   RED.nodes.registerType("myatmosphere-measurements", {
-    category: "MyAtmosphere",
-    paletteLabel: "MyATMO Measurements",
+    category: "environment",
+    paletteLabel: "MyAtmosphere Measurements",
     color: "#0c9bc3",
     defaults: {
       connection: { value: "", type: "myatmosphere-connection" },
@@ -11,9 +11,9 @@
     },
     inputs: 0,
     outputs: 1,
-    icon: "myatmosphere-s.png",
+    icon: "myatmosphere-w.svg",
     label: function () {
-      return this.name || "MyATMO Measurements";
+      return this.name || "MyAtmosphere Measurements";
     },
   });
 </script>

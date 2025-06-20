@@ -1,6 +1,6 @@
 {
   "name": "@palasde/node-red-myatmosphere",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A Node-Red node for subscribing to MyAtmosphere device latest measurements",
   "main": "myatmosphere.js",
   "scripts": {

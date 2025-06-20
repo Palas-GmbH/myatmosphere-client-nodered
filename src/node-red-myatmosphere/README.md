@@ -49,6 +49,10 @@ This project is licensed under the MIT License. See the LICENSE file in the GitH
 
 ## Changelog
 
+### [1.1.1] - 2025-06-20
+
+- Changelog included into readme file.
+
 ### [1.1.0] - 2025-06-20
 
 - Added example flows (`examples/`) for:

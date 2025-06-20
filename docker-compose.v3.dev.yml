@@ -2,7 +2,7 @@ services:
   node-red-client:
     build:
       context: .
-      dockerfile: ./Dockerfile.dev
+      dockerfile: ./Dockerfile.v3.dev
     image: node-red-client:development
     container_name: node-red-client-dev
     restart: always
@@ -11,9 +11,9 @@ services:
       NODE_EXTRA_CA_CERTS: "/certs/mqtt_ca.crt"
       NODE_TLS_REJECT_UNAUTHORIZED: 1 # Set to 0 to disable TLS verification
     ports:
-      - "1884:1880"
+      - "1886:1880"
     volumes:
-      - ./nodered-data:/data
+      - ./nodered-v3-data:/data
       - ../data-platform/config/dev-keys:/certs
     networks:
       - platform-network

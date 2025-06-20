@@ -72,9 +72,29 @@
       <b>Serial Numbers</b>: Comma-separated list of device serial numbers.
     </li>
     <li>
-      <b>Measurement Types</b>: Comma-separated list of measurement types. If
-      not set, all non-null values will be included in the response.
+      <b>Measurement Types</b>: Comma-separated list of measurement types. E.g.
+      <i>pm2_5,pm10</i>. If not set, all non-null values will be included in the
+      response.
     </li>
+  </ul>
+
+  <p>Output:</p>
+  <ul>
+    <li>
+      <b>payload</b>: The exact data contract for the measurement can be found
+      in the
+      <a
+        href="https://my-atmosphere.cloud/measurements/network/api"
+        target="_blank"
+        >MyAtmosphere API docs</a
+      >
+      and related section of the
+      <a href="https://api.my-atmosphere.cloud/streams" target="_blank"
+        >API explorer docs</a
+      >.
+    </li>
+    <li><b>device</b>: Device serial number.</li>
+    <li><b>dataSet</b>: The constant name of the "Measurements" data set.</li>
   </ul>
 
   <p>
@@ -84,6 +104,6 @@
       target="_blank"
       >API documentation</a
     >
-    for complete details.
+    for complete details and private API keys.
   </p>
 </script>

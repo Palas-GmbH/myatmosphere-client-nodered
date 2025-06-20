@@ -1,0 +1,11 @@
+# Use the official Node-Red Docker image as the base image
+FROM nodered/node-red:4.0.9-22-minimal
+
+# Install your custom node globally
+RUN npm install @palasde/node-red-myatmosphere
+
+# Expose the default Node-Red port
+EXPOSE 1880
+
+# Start Node-Red
+CMD ["npm", "start", "--", "--userDir", "/data"]

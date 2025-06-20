@@ -1,6 +1,6 @@
 {
   "name": "@palasde/node-red-myatmosphere",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A Node-Red node for subscribing to MyAtmosphere device latest measurements",
   "main": "myatmosphere.js",
   "scripts": {
@@ -28,9 +28,19 @@
     "@microsoft/signalr": "8.0.7"
   },
   "node-red": {
+    "version": ">=3.0.0",
     "nodes": {
       "myatmosphere-connection": "connection.js",
       "myatmosphere-measurements": "measurements.js"
     }
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "examples": {
+    "MyAtmosphere Single Device Measurements Example": "examples/single-device-flow.json",
+    "MyAtmosphere Multiple Devices Measurements Example": "examples/multiple-devices-flow.json",
+    "MyAtmosphere Alert Example": "examples/alert-flow.json",
+    "MyAtmosphere Catch Errors Example": "examples/catch-errors-flow.json"
   }
 }

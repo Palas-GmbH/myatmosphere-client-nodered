@@ -1,0 +1,91 @@
+[
+    {
+        "id": "c0b3430d251f7dd8",
+        "type": "tab",
+        "label": "Demo Catch Errors",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f732a2b2898d17f2",
+        "type": "myatmosphere-measurements",
+        "z": "c0b3430d251f7dd8",
+        "connection": "a789340140386cf1",
+        "name": "Device 1, PM2_5, PM10",
+        "serialNumbers": "device1",
+        "measurementTypes": "pm2_5,pm10",
+        "x": 170,
+        "y": 120,
+        "wires": [
+            [
+                "c5696e11ab49c012"
+            ]
+        ]
+    },
+    {
+        "id": "c5696e11ab49c012",
+        "type": "debug",
+        "z": "c0b3430d251f7dd8",
+        "name": "Log device measurement only",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 470,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "70ca692174cad821",
+        "type": "catch",
+        "z": "c0b3430d251f7dd8",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 120,
+        "y": 220,
+        "wires": [
+            [
+                "760eedc111f9e5d7"
+            ]
+        ]
+    },
+    {
+        "id": "760eedc111f9e5d7",
+        "type": "debug",
+        "z": "c0b3430d251f7dd8",
+        "name": "Log error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 280,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "78b4d5715fe10778",
+        "type": "comment",
+        "z": "c0b3430d251f7dd8",
+        "name": "Configuration comment",
+        "info": "Used settings:\n- subscribed on single device by serial number\n- pm2_5 and pm10 measurement types only\n\nCatch all errors in the catch node",
+        "x": 160,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "a789340140386cf1",
+        "type": "myatmosphere-connection",
+        "name": "Private API Key",
+        "apiEndpoint": "https://api.my-atmosphere.cloud"
+    }
+]

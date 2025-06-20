@@ -1,0 +1,59 @@
+[
+    {
+        "id": "072f4fe5bd76b783",
+        "type": "tab",
+        "label": "Demo Single Device",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "aabb87c7292e4927",
+        "type": "myatmosphere-measurements",
+        "z": "072f4fe5bd76b783",
+        "connection": "a789340140386cf1",
+        "name": "Device 1, PM2_5, PM10",
+        "serialNumbers": "device1",
+        "measurementTypes": "pm2_5,pm10",
+        "x": 170,
+        "y": 140,
+        "wires": [
+            [
+                "65d543f6d64a138e"
+            ]
+        ]
+    },
+    {
+        "id": "65d543f6d64a138e",
+        "type": "debug",
+        "z": "072f4fe5bd76b783",
+        "name": "Log device measurement only",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 470,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "f607df0899a7e021",
+        "type": "comment",
+        "z": "072f4fe5bd76b783",
+        "name": "Configuration comment",
+        "info": "Used settings:\n- subscribed on single device by serial number\n- pm2_5 and pm10 measurement types only",
+        "x": 160,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "a789340140386cf1",
+        "type": "myatmosphere-connection",
+        "name": "Private API Key",
+        "apiEndpoint": "https://api.my-atmosphere.cloud"
+    }
+]

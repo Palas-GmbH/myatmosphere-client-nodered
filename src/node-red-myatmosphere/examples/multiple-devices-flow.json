@@ -1,0 +1,157 @@
+[
+    {
+        "id": "847d37e7d02f8559",
+        "type": "tab",
+        "label": "Demo Multiple Devices",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5e4bd6d11782f632",
+        "type": "myatmosphere-measurements",
+        "z": "847d37e7d02f8559",
+        "connection": "a789340140386cf1",
+        "name": "Multiple Devices, All Data",
+        "serialNumbers": "device2,device3,device4",
+        "measurementTypes": "",
+        "x": 170,
+        "y": 140,
+        "wires": [
+            [
+                "360155eac1a19351"
+            ]
+        ]
+    },
+    {
+        "id": "833572920fab3f12",
+        "type": "debug",
+        "z": "847d37e7d02f8559",
+        "name": "Log complete message with device number",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "360155eac1a19351",
+        "type": "switch",
+        "z": "847d37e7d02f8559",
+        "name": "Select Device",
+        "property": "device",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "device2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "device3",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "device4",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 420,
+        "y": 140,
+        "wires": [
+            [
+                "12cbf03d23e28218"
+            ],
+            [
+                "0c686293b992123b"
+            ],
+            [
+                "d7f10cf189c8c1fb"
+            ],
+            [
+                "833572920fab3f12"
+            ]
+        ]
+    },
+    {
+        "id": "12cbf03d23e28218",
+        "type": "debug",
+        "z": "847d37e7d02f8559",
+        "name": "Log device2 measurement",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "0c686293b992123b",
+        "type": "debug",
+        "z": "847d37e7d02f8559",
+        "name": "Log device3 measurement",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "d7f10cf189c8c1fb",
+        "type": "debug",
+        "z": "847d37e7d02f8559",
+        "name": "Log device4 measurement",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "30ee4195e21ec258",
+        "type": "comment",
+        "z": "847d37e7d02f8559",
+        "name": "Configuration comment",
+        "info": "Used settings:\n- subscribed on list of devices by serial numbers\n- measurement types are not specified, all types supported by the device are included",
+        "x": 160,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "a789340140386cf1",
+        "type": "myatmosphere-connection",
+        "name": "Private API Key",
+        "apiEndpoint": "https://api.my-atmosphere.cloud"
+    }
+]

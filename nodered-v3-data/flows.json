@@ -1,0 +1,418 @@
+[
+    {
+        "id": "1423b64d6b988ce5",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "072f4fe5bd76b783",
+        "type": "tab",
+        "label": "Demo Single Device",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "847d37e7d02f8559",
+        "type": "tab",
+        "label": "Demo Multiple Devices",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "0d229a046f27ac17",
+        "type": "tab",
+        "label": "Demo Alert",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c0b3430d251f7dd8",
+        "type": "tab",
+        "label": "Demo Catch Errors",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d62895d1eb38278c",
+        "type": "myatmosphere-connection",
+        "name": "Palas GmbH Dev",
+        "apiEndpoint": "https://palas-api-dev.azurewebsites.net"
+    },
+    {
+        "id": "a789340140386cf1",
+        "type": "myatmosphere-connection",
+        "name": "Private API Key",
+        "apiEndpoint": "https://api.my-atmosphere.cloud"
+    },
+    {
+        "id": "801bd659fa5ce29c",
+        "type": "myatmosphere-measurements",
+        "z": "1423b64d6b988ce5",
+        "connection": "d62895d1eb38278c",
+        "name": "My",
+        "serialNumbers": "13256",
+        "measurementTypes": "",
+        "x": 70,
+        "y": 100,
+        "wires": [
+            [
+                "55ccd8b3e23b37f9"
+            ]
+        ]
+    },
+    {
+        "id": "55ccd8b3e23b37f9",
+        "type": "debug",
+        "z": "1423b64d6b988ce5",
+        "name": "Measurement",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 240,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "aabb87c7292e4927",
+        "type": "myatmosphere-measurements",
+        "z": "072f4fe5bd76b783",
+        "connection": "a789340140386cf1",
+        "name": "Device 1, PM2_5, PM10",
+        "serialNumbers": "device1",
+        "measurementTypes": "pm2_5,pm10",
+        "x": 170,
+        "y": 140,
+        "wires": [
+            [
+                "65d543f6d64a138e"
+            ]
+        ]
+    },
+    {
+        "id": "65d543f6d64a138e",
+        "type": "debug",
+        "z": "072f4fe5bd76b783",
+        "name": "Log device measurement only",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 470,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "f607df0899a7e021",
+        "type": "comment",
+        "z": "072f4fe5bd76b783",
+        "name": "Configuration comment",
+        "info": "Used settings:\n- subscribed on single device by serial number\n- pm2_5 and pm10 measurement types only",
+        "x": 160,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "5e4bd6d11782f632",
+        "type": "myatmosphere-measurements",
+        "z": "847d37e7d02f8559",
+        "connection": "a789340140386cf1",
+        "name": "Multiple Devices, All Data",
+        "serialNumbers": "device2,device3,device4",
+        "measurementTypes": "",
+        "x": 170,
+        "y": 140,
+        "wires": [
+            [
+                "360155eac1a19351"
+            ]
+        ]
+    },
+    {
+        "id": "833572920fab3f12",
+        "type": "debug",
+        "z": "847d37e7d02f8559",
+        "name": "Log complete message with device number",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "360155eac1a19351",
+        "type": "switch",
+        "z": "847d37e7d02f8559",
+        "name": "Select Device",
+        "property": "device",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "device2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "device3",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "device4",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 420,
+        "y": 140,
+        "wires": [
+            [
+                "12cbf03d23e28218"
+            ],
+            [
+                "0c686293b992123b"
+            ],
+            [
+                "d7f10cf189c8c1fb"
+            ],
+            [
+                "833572920fab3f12"
+            ]
+        ]
+    },
+    {
+        "id": "12cbf03d23e28218",
+        "type": "debug",
+        "z": "847d37e7d02f8559",
+        "name": "Log device2 measurement",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "0c686293b992123b",
+        "type": "debug",
+        "z": "847d37e7d02f8559",
+        "name": "Log device3 measurement",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "d7f10cf189c8c1fb",
+        "type": "debug",
+        "z": "847d37e7d02f8559",
+        "name": "Log device4 measurement",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "30ee4195e21ec258",
+        "type": "comment",
+        "z": "847d37e7d02f8559",
+        "name": "Configuration comment",
+        "info": "Used settings:\n- subscribed on list of devices by serial numbers\n- measurement types are not specified, all types supported by the device are included",
+        "x": 160,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "11917b049d6ee23a",
+        "type": "myatmosphere-measurements",
+        "z": "0d229a046f27ac17",
+        "connection": "a789340140386cf1",
+        "name": "Device 1, PM10",
+        "serialNumbers": "device1",
+        "measurementTypes": "pm10",
+        "x": 140,
+        "y": 180,
+        "wires": [
+            [
+                "1c7b53c1cebc27d5"
+            ]
+        ]
+    },
+    {
+        "id": "1c7b53c1cebc27d5",
+        "type": "switch",
+        "z": "0d229a046f27ac17",
+        "name": "PM10 > 50 µg/m³",
+        "property": "payload.pm10",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "50",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 350,
+        "y": 180,
+        "wires": [
+            [
+                "a518f036e7df22bb"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "a518f036e7df22bb",
+        "type": "debug",
+        "z": "0d229a046f27ac17",
+        "name": "Alert PM10 > 50 µg/m³",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "536bfcf6c53c75c5",
+        "type": "comment",
+        "z": "0d229a046f27ac17",
+        "name": "Configuration comment",
+        "info": "Used settings:\n- subscribed on single device by serial number\n- pm10 measurement types only\n\nListen on the node output and check payload.pm10 value",
+        "x": 160,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "f732a2b2898d17f2",
+        "type": "myatmosphere-measurements",
+        "z": "c0b3430d251f7dd8",
+        "connection": "a789340140386cf1",
+        "name": "Device 1, PM2_5, PM10",
+        "serialNumbers": "device1",
+        "measurementTypes": "pm2_5,pm10",
+        "x": 170,
+        "y": 120,
+        "wires": [
+            [
+                "c5696e11ab49c012"
+            ]
+        ]
+    },
+    {
+        "id": "c5696e11ab49c012",
+        "type": "debug",
+        "z": "c0b3430d251f7dd8",
+        "name": "Log device measurement only",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 470,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "70ca692174cad821",
+        "type": "catch",
+        "z": "c0b3430d251f7dd8",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 120,
+        "y": 220,
+        "wires": [
+            [
+                "760eedc111f9e5d7"
+            ]
+        ]
+    },
+    {
+        "id": "760eedc111f9e5d7",
+        "type": "debug",
+        "z": "c0b3430d251f7dd8",
+        "name": "Log error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 280,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "78b4d5715fe10778",
+        "type": "comment",
+        "z": "c0b3430d251f7dd8",
+        "name": "Configuration comment",
+        "info": "Used settings:\n- subscribed on single device by serial number\n- pm2_5 and pm10 measurement types only\n\nCatch all errors in the catch node",
+        "x": 160,
+        "y": 40,
+        "wires": []
+    }
+]

@@ -1,0 +1,15 @@
+services:
+  node-red-client:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.demo
+    image: node-red-client:demo
+    container_name: node-red-client-demo
+    restart: always
+    environment:
+      TZ: "Europe/Berlin"
+      NODE_TLS_REJECT_UNAUTHORIZED: 0 # Set to 0 to disable TLS verification
+    ports:
+      - "1885:1880"
+    volumes:
+      - ./nodered-data-demo:/data

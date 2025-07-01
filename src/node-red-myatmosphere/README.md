@@ -1,5 +1,12 @@
 # @palasde/node-red-myatmosphere
 
+[![platform](https://img.shields.io/badge/platform-Node--RED-red?logo=nodered)](https://nodered.org)
+[![Min Node Version](https://img.shields.io/node/v/@palasde/node-red-myatmosphere.svg)](https://nodejs.org/en/)
+[![GitHub version](https://img.shields.io/github/package-json/v/Palas-GmbH/myatmosphere-client-nodered?filename=src/node-red-myatmosphere/package.json&logo=npm)](https://www.npmjs.com/package/@palasde/node-red-myatmosphere)
+![GitHub last commit](https://img.shields.io/github/last-commit/Palas-GmbH/myatmosphere-client-nodered)
+![NPM Total Downloads](https://img.shields.io/npm/dt/@palasde/node-red-myatmosphere.svg)
+![NPM Downloads per month](https://img.shields.io/npm/dm/@palasde/node-red-myatmosphere)
+
 ## Overview
 
 This project provides a Node-RED node `@palasde/node-red-myatmosphere` for subscribing to the latest measurements from devices connected to the [MyAtmosphere](https://my-atmosphere.net/) air quality monitoring system. It enables users to seamlessly integrate air quality and environmental data into their Node-RED workflows.
@@ -43,11 +50,33 @@ Here is an example of how to use the MyAtmosphere nodes in a Node-RED flow:
 1. Drag the **myatmo measurement** node onto your workspace and configure it with your connection and device details.
 2. Use the output from the **myatmo measurement** node to trigger other nodes in your flow, such as saving the data or sending alerts.
 
+![Connection config](https://github.com/Palas-GmbH/myatmosphere-client-nodered/blob/main/readme/config.png?raw=true)
+
+![MyAtmosphere node config for a single device](https://github.com/Palas-GmbH/myatmosphere-client-nodered/blob/main/readme/13256-config.png?raw=true)
+
+### Single Device with only PM2.5 and PM10
+
+![Single device config](https://github.com/Palas-GmbH/myatmosphere-client-nodered/blob/main/readme/single-config.png?raw=true)
+
+### Setting Alert
+
+![Alert](https://github.com/Palas-GmbH/myatmosphere-client-nodered/blob/main/readme/alert.png?raw=true)
+
+### Multiple Device with All Types
+
+![Multi devices config](https://github.com/Palas-GmbH/myatmosphere-client-nodered/blob/main/readme/multi-config.png?raw=true)
+
+![Multi devices flow](https://github.com/Palas-GmbH/myatmosphere-client-nodered/blob/main/readme/multi.png?raw=true)
+
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file in the GitHub repository for more details.
 
 ## Changelog
+
+### [1.1.4] - 2025-07-02
+
+- Added screenshots to the readme.
 
 ### [1.1.3] - 2025-06-21
 

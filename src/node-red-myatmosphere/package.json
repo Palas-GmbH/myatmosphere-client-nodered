@@ -1,6 +1,6 @@
 {
   "name": "@palasde/node-red-myatmosphere",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "A Node-Red node for subscribing to MyAtmosphere device latest measurements",
   "main": "myatmosphere.js",
   "scripts": {
@@ -23,6 +23,10 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Palas-GmbH/myatmosphere-client-nodered.git"
+  },
+  "homepage": "https://github.com/Palas-GmbH/myatmosphere-client-nodered",
+  "bugs": {
+    "url": "https://github.com/Palas-GmbH/myatmosphere-client-nodered/issues/"
   },
   "dependencies": {
     "@microsoft/signalr": "8.0.7"

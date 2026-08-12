@@ -26,6 +26,7 @@ jobs:
       package_name: ${{ steps.package.outputs.name }}
       package_version: ${{ steps.package.outputs.version }}
       package_sha1: ${{ steps.package.outputs.sha1 }}
+      package_integrity: ${{ steps.package.outputs.integrity }}
     defaults:
       run:
         working-directory: src/node-red-myatmosphere
@@ -76,6 +77,7 @@ jobs:
           echo "name=$(node -p "require('./package.json').name")" >> "$GITHUB_OUTPUT"
           echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
           echo "sha1=$(sha1sum "$package_file" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          echo "integrity=sha512-$(openssl dgst -sha512 -binary "$package_file" | openssl base64 -A)" >> "$GITHUB_OUTPUT"
 
       - name: Transfer verified package to publisher
         uses: actions/upload-artifact@v4
@@ -118,6 +120,7 @@ jobs:
           PACKAGE_NAME: ${{ needs.build-package.outputs.package_name }}
           PACKAGE_VERSION: ${{ needs.build-package.outputs.package_version }}
           PACKAGE_SHA1: ${{ needs.build-package.outputs.package_sha1 }}
+          PACKAGE_INTEGRITY: ${{ needs.build-package.outputs.package_integrity }}
         run: |
           set -euo pipefail
           actual_sha1="$(sha1sum "$PACKAGE_FILE" | awk '{print $1}')"
@@ -125,8 +128,14 @@ jobs:
             echo "::error::Transferred package checksum does not match the read-only build job."
             exit 1
           fi
+          actual_integrity="sha512-$(openssl dgst -sha512 -binary "$PACKAGE_FILE" | openssl base64 -A)"
+          if [[ "$actual_integrity" != "$PACKAGE_INTEGRITY" ]]; then
+            echo "::error::Transferred package SHA-512 integrity does not match the read-only build job."
+            exit 1
+          fi
           if registry_sha1="$(npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" dist.shasum 2>/dev/null)"; then
-            if [[ "$registry_sha1" != "$PACKAGE_SHA1" ]]; then
+            registry_integrity="$(npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" dist.integrity)"
+            if [[ "$registry_sha1" != "$PACKAGE_SHA1" || "$registry_integrity" != "$PACKAGE_INTEGRITY" ]]; then
               echo "::error::npm already has ${PACKAGE_NAME}@${PACKAGE_VERSION} with different bytes."
               exit 1
             fi
@@ -136,7 +145,8 @@ jobs:
 
           npm publish "$PACKAGE_FILE" --ignore-scripts --provenance --access public
           registry_sha1="$(npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" dist.shasum)"
-          if [[ "$registry_sha1" != "$PACKAGE_SHA1" ]]; then
+          registry_integrity="$(npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" dist.integrity)"
+          if [[ "$registry_sha1" != "$PACKAGE_SHA1" || "$registry_integrity" != "$PACKAGE_INTEGRITY" ]]; then
             echo "::error::npm did not report the checksum of the package built by this workflow."
             exit 1
           fi
@@ -148,11 +158,17 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if gh release view "$GITHUB_REF_NAME" --json tagName,targetCommitish > release.json 2>/dev/null; then
+          if gh release view "$GITHUB_REF_NAME" --json tagName,targetCommitish,isDraft,isPrerelease > release.json 2>/dev/null; then
             release_tag="$(jq -r '.tagName' release.json)"
             target_commitish="$(jq -r '.targetCommitish' release.json)"
+            is_draft="$(jq -r '.isDraft' release.json)"
+            is_prerelease="$(jq -r '.isPrerelease' release.json)"
             if [[ "$release_tag" != "$GITHUB_REF_NAME" ]]; then
               echo "::error::Existing GitHub Release '$release_tag' does not match '$GITHUB_REF_NAME'."
+              exit 1
+            fi
+            if [[ "$is_draft" != false || "$is_prerelease" != false ]]; then
+              echo "::error::Existing stable GitHub Release must be published and not a prerelease."
               exit 1
             fi
             if [[ "$target_commitish" =~ ^[0-9a-f]{40}$ ]]; then

@@ -16,12 +16,16 @@ jobs:
       source_sha: ${{ github.sha }}
       source_ref: ${{ github.ref }}
 
-  publish:
+  build-package:
     needs: tag-source-guard
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      id-token: write
+      contents: read
+    outputs:
+      package_file: ${{ steps.package.outputs.file }}
+      package_name: ${{ steps.package.outputs.name }}
+      package_version: ${{ steps.package.outputs.version }}
+      package_sha1: ${{ steps.package.outputs.sha1 }}
     defaults:
       run:
         working-directory: src/node-red-myatmosphere
@@ -69,29 +73,69 @@ jobs:
           package_json="$(npm pack --json)"
           package_file="$(node -e "const fs=require('fs'); console.log(JSON.parse(fs.readFileSync(0, 'utf8'))[0].filename)" <<< "$package_json")"
           echo "file=$package_file" >> "$GITHUB_OUTPUT"
+          echo "name=$(node -p "require('./package.json').name")" >> "$GITHUB_OUTPUT"
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
           echo "sha1=$(sha1sum "$package_file" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+
+      - name: Transfer verified package to publisher
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-red-package
+          path: src/node-red-myatmosphere/${{ steps.package.outputs.file }}
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: [tag-source-guard, build-package]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Check out tag identity only
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js trusted publishing
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24.x
+          registry-url: https://registry.npmjs.org
+
+      - name: Download verified package
+        uses: actions/download-artifact@v4
+        with:
+          name: node-red-package
+          path: package
 
       - name: Publish or verify identical registry package
         id: registry
         shell: bash
         env:
-          PACKAGE_FILE: ${{ steps.package.outputs.file }}
-          PACKAGE_SHA1: ${{ steps.package.outputs.sha1 }}
+          PACKAGE_FILE: package/${{ needs.build-package.outputs.package_file }}
+          PACKAGE_NAME: ${{ needs.build-package.outputs.package_name }}
+          PACKAGE_VERSION: ${{ needs.build-package.outputs.package_version }}
+          PACKAGE_SHA1: ${{ needs.build-package.outputs.package_sha1 }}
         run: |
           set -euo pipefail
-          package_name="$(node -p "require('./package.json').name")"
-          package_version="$(node -p "require('./package.json').version")"
-          if registry_sha1="$(npm view "${package_name}@${package_version}" dist.shasum 2>/dev/null)"; then
+          actual_sha1="$(sha1sum "$PACKAGE_FILE" | awk '{print $1}')"
+          if [[ "$actual_sha1" != "$PACKAGE_SHA1" ]]; then
+            echo "::error::Transferred package checksum does not match the read-only build job."
+            exit 1
+          fi
+          if registry_sha1="$(npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" dist.shasum 2>/dev/null)"; then
             if [[ "$registry_sha1" != "$PACKAGE_SHA1" ]]; then
-              echo "::error::npm already has ${package_name}@${package_version} with different bytes."
+              echo "::error::npm already has ${PACKAGE_NAME}@${PACKAGE_VERSION} with different bytes."
               exit 1
             fi
             echo "published=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          npm publish "$PACKAGE_FILE" --provenance --access public
-          registry_sha1="$(npm view "${package_name}@${package_version}" dist.shasum)"
+          npm publish "$PACKAGE_FILE" --ignore-scripts --provenance --access public
+          registry_sha1="$(npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" dist.shasum)"
           if [[ "$registry_sha1" != "$PACKAGE_SHA1" ]]; then
             echo "::error::npm did not report the checksum of the package built by this workflow."
             exit 1
@@ -104,12 +148,26 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if gh release view "$GITHUB_REF_NAME" --json tagName --jq '.tagName' > release-tag.txt 2>/dev/null; then
-            release_tag="$(cat release-tag.txt)"
-            tag_commit="$(git rev-parse "${GITHUB_REF_NAME}^{commit}")"
-            if [[ "$release_tag" != "$GITHUB_REF_NAME" || "$tag_commit" != "$GITHUB_SHA" ]]; then
-              echo "::error::Existing GitHub Release '$release_tag' does not resolve to '$GITHUB_SHA'."
+          if gh release view "$GITHUB_REF_NAME" --json tagName,targetCommitish > release.json 2>/dev/null; then
+            release_tag="$(jq -r '.tagName' release.json)"
+            target_commitish="$(jq -r '.targetCommitish' release.json)"
+            if [[ "$release_tag" != "$GITHUB_REF_NAME" ]]; then
+              echo "::error::Existing GitHub Release '$release_tag' does not match '$GITHUB_REF_NAME'."
               exit 1
+            fi
+            if [[ "$target_commitish" =~ ^[0-9a-f]{40}$ ]]; then
+              if [[ "$target_commitish" != "$GITHUB_SHA" ]]; then
+                echo "::error::Existing GitHub Release targets immutable commit '$target_commitish', not '$GITHUB_SHA'."
+                exit 1
+              fi
+            else
+              # Compatibility for releases created before this workflow bound
+              # targetCommitish to an immutable SHA (for example, v1.1.0 used main).
+              tag_commit="$(git rev-parse "${GITHUB_REF_NAME}^{commit}")"
+              if [[ "$tag_commit" != "$GITHUB_SHA" ]]; then
+                echo "::error::Legacy release tag does not resolve to '$GITHUB_SHA'."
+                exit 1
+              fi
             fi
           else
             gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes --target "$GITHUB_SHA"

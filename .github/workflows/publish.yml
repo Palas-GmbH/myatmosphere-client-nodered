@@ -1,35 +1,190 @@
-name: Publish Node-Red Package
+name: Publish Node-RED package
 
 on:
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  push:
+    tags:
+      - "v*.*.*"
 
-  # Triggers the workflow when a new release is published
-  release:
-    types: [published]
+permissions: {}
 
 jobs:
-  publish:
+  tag-source-guard:
+    permissions:
+      contents: read
+    uses: Palas-GmbH/foundation-device-delivery/.github/workflows/reusable-semantic-tag-source-guard.yml@main
+    with:
+      source_sha: ${{ github.sha }}
+      source_ref: ${{ github.ref }}
+
+  build-package:
+    needs: tag-source-guard
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
       contents: read
-
+    outputs:
+      package_file: ${{ steps.package.outputs.file }}
+      package_name: ${{ steps.package.outputs.name }}
+      package_version: ${{ steps.package.outputs.version }}
+      package_sha1: ${{ steps.package.outputs.sha1 }}
+      package_integrity: ${{ steps.package.outputs.integrity }}
+    defaults:
+      run:
+        working-directory: src/node-red-myatmosphere
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - name: Check out tagged source
+        uses: actions/checkout@v7
         with:
-          node-version: "20.x"
-          registry-url: "https://registry.npmjs.org"
+          fetch-depth: 0
+          persist-credentials: false
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: src/node-red-myatmosphere
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24.x
+          registry-url: https://registry.npmjs.org
+          cache: npm
+          cache-dependency-path: src/node-red-myatmosphere/package-lock.json
 
-      - name: Publish to npm
-        run: npm publish --provenance --access public
-        working-directory: src/node-red-myatmosphere
+      - name: Verify tag matches package version
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag_version="${GITHUB_REF_NAME#v}"
+          package_version="$(node -p "require('./package.json').version")"
+          if [[ ! "$tag_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Release tags must be exact vX.Y.Z values."
+            exit 1
+          fi
+          if [[ "$tag_version" != "$package_version" ]]; then
+            echo "::error::Tag version '$tag_version' does not match package.json version '$package_version'."
+            exit 1
+          fi
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Run focused tests
+        run: npm test
+
+      - name: Build package and record checksum
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          package_json="$(npm pack --json)"
+          package_file="$(node -e "const fs=require('fs'); console.log(JSON.parse(fs.readFileSync(0, 'utf8'))[0].filename)" <<< "$package_json")"
+          echo "file=$package_file" >> "$GITHUB_OUTPUT"
+          echo "name=$(node -p "require('./package.json').name")" >> "$GITHUB_OUTPUT"
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+          echo "sha1=$(sha1sum "$package_file" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          echo "integrity=sha512-$(openssl dgst -sha512 -binary "$package_file" | openssl base64 -A)" >> "$GITHUB_OUTPUT"
+
+      - name: Transfer verified package to publisher
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-red-package
+          path: src/node-red-myatmosphere/${{ steps.package.outputs.file }}
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: [tag-source-guard, build-package]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Check out tag identity only
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js trusted publishing
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24.x
+          registry-url: https://registry.npmjs.org
+
+      - name: Download verified package
+        uses: actions/download-artifact@v4
+        with:
+          name: node-red-package
+          path: package
+
+      - name: Publish or verify identical registry package
+        id: registry
+        shell: bash
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PACKAGE_FILE: package/${{ needs.build-package.outputs.package_file }}
+          PACKAGE_NAME: ${{ needs.build-package.outputs.package_name }}
+          PACKAGE_VERSION: ${{ needs.build-package.outputs.package_version }}
+          PACKAGE_SHA1: ${{ needs.build-package.outputs.package_sha1 }}
+          PACKAGE_INTEGRITY: ${{ needs.build-package.outputs.package_integrity }}
+        run: |
+          set -euo pipefail
+          actual_sha1="$(sha1sum "$PACKAGE_FILE" | awk '{print $1}')"
+          if [[ "$actual_sha1" != "$PACKAGE_SHA1" ]]; then
+            echo "::error::Transferred package checksum does not match the read-only build job."
+            exit 1
+          fi
+          actual_integrity="sha512-$(openssl dgst -sha512 -binary "$PACKAGE_FILE" | openssl base64 -A)"
+          if [[ "$actual_integrity" != "$PACKAGE_INTEGRITY" ]]; then
+            echo "::error::Transferred package SHA-512 integrity does not match the read-only build job."
+            exit 1
+          fi
+          if registry_sha1="$(npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" dist.shasum 2>/dev/null)"; then
+            registry_integrity="$(npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" dist.integrity)"
+            if [[ "$registry_sha1" != "$PACKAGE_SHA1" || "$registry_integrity" != "$PACKAGE_INTEGRITY" ]]; then
+              echo "::error::npm already has ${PACKAGE_NAME}@${PACKAGE_VERSION} with different bytes."
+              exit 1
+            fi
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          npm publish "$PACKAGE_FILE" --ignore-scripts --provenance --access public
+          registry_sha1="$(npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" dist.shasum)"
+          registry_integrity="$(npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" dist.integrity)"
+          if [[ "$registry_sha1" != "$PACKAGE_SHA1" || "$registry_integrity" != "$PACKAGE_INTEGRITY" ]]; then
+            echo "::error::npm did not report the checksum of the package built by this workflow."
+            exit 1
+          fi
+          echo "published=true" >> "$GITHUB_OUTPUT"
+
+      - name: Create or verify GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if gh release view "$GITHUB_REF_NAME" --json tagName,targetCommitish,isDraft,isPrerelease > release.json 2>/dev/null; then
+            release_tag="$(jq -r '.tagName' release.json)"
+            target_commitish="$(jq -r '.targetCommitish' release.json)"
+            is_draft="$(jq -r '.isDraft' release.json)"
+            is_prerelease="$(jq -r '.isPrerelease' release.json)"
+            if [[ "$release_tag" != "$GITHUB_REF_NAME" ]]; then
+              echo "::error::Existing GitHub Release '$release_tag' does not match '$GITHUB_REF_NAME'."
+              exit 1
+            fi
+            if [[ "$is_draft" != false || "$is_prerelease" != false ]]; then
+              echo "::error::Existing stable GitHub Release must be published and not a prerelease."
+              exit 1
+            fi
+            if [[ "$target_commitish" =~ ^[0-9a-f]{40}$ ]]; then
+              if [[ "$target_commitish" != "$GITHUB_SHA" ]]; then
+                echo "::error::Existing GitHub Release targets immutable commit '$target_commitish', not '$GITHUB_SHA'."
+                exit 1
+              fi
+            else
+              # Compatibility for releases created before this workflow bound
+              # targetCommitish to an immutable SHA (for example, v1.1.0 used main).
+              tag_commit="$(git rev-parse "${GITHUB_REF_NAME}^{commit}")"
+              if [[ "$tag_commit" != "$GITHUB_SHA" ]]; then
+                echo "::error::Legacy release tag does not resolve to '$GITHUB_SHA'."
+                exit 1
+              fi
+            fi
+          else
+            gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes --target "$GITHUB_SHA"
+          fi

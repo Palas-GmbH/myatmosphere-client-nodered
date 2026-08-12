@@ -28,8 +28,21 @@ Create tarball (.tgz files) of npm package without publishing it to the npm regi
 
 ## Publishing
 
-The creation of a new release on GitHub will trigger the publication to the NPM repository. Also, publishing can be triggered manually from GitHub Actions.
-Check the version number in `package.json` before releasing/publishing.
+Publishing is intentionally tag-driven. Push an exact `vX.Y.Z` tag only after
+the package version has been updated to the matching `X.Y.Z` value in
+`src/node-red-myatmosphere/package.json`. The release workflow runs the locked
+dependency install, focused tests, and package validation before publishing
+with npm provenance.
+
+The workflow is safe to rerun: when npm already contains that version, it
+continues only if the registry checksum exactly matches the package built from
+the tag. It then creates or verifies the GitHub Release for the same commit.
+It never permits manual publishing or a GitHub Release to publish a different
+source revision.
+
+Configure npm trusted publishing for this repository and the `publish.yml`
+workflow before the first tag-based release. No `NPM_TOKEN` GitHub secret is
+used or required by this workflow.
 
 ### Updating node in Node-RED library
 

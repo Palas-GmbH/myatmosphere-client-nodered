@@ -1,0 +1,41 @@
+name: Validate Node-RED package
+
+on:
+  pull_request:
+    paths:
+      - "src/node-red-myatmosphere/**"
+      - ".github/workflows/ci.yml"
+      - ".github/workflows/publish.yml"
+      - "tests/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/node-red-myatmosphere
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: npm
+          cache-dependency-path: src/node-red-myatmosphere/package-lock.json
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Run focused tests
+        run: npm test
+
+      - name: Validate package contents
+        run: npm pack --dry-run
+
+      - name: Verify workflow release contract
+        run: pwsh -NoProfile -File ../../tests/workflow-contract.ps1

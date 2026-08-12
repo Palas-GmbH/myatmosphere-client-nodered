@@ -17,6 +17,7 @@ function Assert-NotContains([string] $Content, [string] $Unexpected) {
 }
 
 Assert-Contains $ci 'pull_request:'
+Assert-Contains $ci 'branches: [main]'
 Assert-Contains $ci 'npm ci'
 Assert-Contains $ci 'npm test'
 Assert-Contains $ci 'npm pack --dry-run'
@@ -28,6 +29,8 @@ Assert-Contains $publish 'persist-credentials: false'
 Assert-Contains $publish 'npm publish "$PACKAGE_FILE" --provenance --access public'
 Assert-Contains $publish 'npm already has ${package_name}@${package_version} with different bytes.'
 Assert-Contains $publish 'gh release create'
+Assert-Contains $publish 'git rev-parse "${GITHUB_REF_NAME}^{commit}"'
+Assert-NotContains $publish 'targetCommitish'
 Assert-NotContains $publish 'workflow_dispatch:'
 Assert-NotContains $publish 'release:'
 Assert-NotContains $publish 'NODE_AUTH_TOKEN'

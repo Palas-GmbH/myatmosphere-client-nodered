@@ -104,10 +104,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if gh release view "$GITHUB_REF_NAME" --json targetCommitish --jq '.targetCommitish' > target.txt 2>/dev/null; then
-            target_commitish="$(cat target.txt)"
-            if [[ "$target_commitish" != "$GITHUB_SHA" ]]; then
-              echo "::error::Existing GitHub Release '$GITHUB_REF_NAME' targets '$target_commitish', not '$GITHUB_SHA'."
+          if gh release view "$GITHUB_REF_NAME" --json tagName --jq '.tagName' > release-tag.txt 2>/dev/null; then
+            release_tag="$(cat release-tag.txt)"
+            tag_commit="$(git rev-parse "${GITHUB_REF_NAME}^{commit}")"
+            if [[ "$release_tag" != "$GITHUB_REF_NAME" || "$tag_commit" != "$GITHUB_SHA" ]]; then
+              echo "::error::Existing GitHub Release '$release_tag' does not resolve to '$GITHUB_SHA'."
               exit 1
             fi
           else

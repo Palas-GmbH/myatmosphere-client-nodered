@@ -1,16 +1,16 @@
 # Use the official Node-Red Docker image as the base image
-FROM nodered/node-red:4.0.9-22-minimal
+FROM nodered/node-red:4.1.17-22-minimal@sha256:79fe8afd82f59ee1c09cd7b516ba045b6a4f49e604fcf5e1806cce7d6fdbbab5
 
 RUN mkdir -p /usr/src/node-red/node-red-myatmosphere
 
 # Copy custom node files into the container
-COPY src/node-red-myatmosphere/* /usr/src/node-red/node-red-myatmosphere/
+COPY --chown=node-red:node-red src/node-red-myatmosphere/ /usr/src/node-red/node-red-myatmosphere/
 
 # Change working directory to the custom node directory
 WORKDIR /usr/src/node-red/node-red-myatmosphere
 
 # Install dependencies for the custom node
-RUN npm install
+RUN npm ci
 
 # Change working directory back to Node-Red user directory
 WORKDIR /usr/src/node-red

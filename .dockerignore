@@ -1,0 +1,9 @@
+# Only the custom node source belongs in these images; local flows and credentials do not.
+**
+!Dockerfile*
+!src/
+!src/node-red-myatmosphere/
+!src/node-red-myatmosphere/**
+**/node_modules
+**/.env*
+**/*.tgz

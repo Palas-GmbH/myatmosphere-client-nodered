@@ -1,5 +1,5 @@
 # Use the official Node-Red Docker image as the base image
-FROM nodered/node-red:4.0.9-22-minimal
+FROM nodered/node-red:4.1.17-22-minimal@sha256:79fe8afd82f59ee1c09cd7b516ba045b6a4f49e604fcf5e1806cce7d6fdbbab5
 
 # Install your custom node globally
 RUN npm install @palasde/node-red-myatmosphere@latest

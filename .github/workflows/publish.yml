@@ -40,10 +40,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: 24.x
+          node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
           cache: npm
           cache-dependency-path: src/node-red-myatmosphere/package-lock.json
+
+      - name: Select repository npm
+        run: npm install --global npm@12.2.1 --ignore-scripts --no-audit --no-fund
 
       - name: Verify tag matches package version
         shell: bash
@@ -103,8 +106,11 @@ jobs:
       - name: Set up Node.js trusted publishing
         uses: actions/setup-node@v7
         with:
-          node-version: 24.x
+          node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
+
+      - name: Select repository npm
+        run: npm install --global npm@12.2.1 --ignore-scripts --no-audit --no-fund
 
       - name: Download verified package
         uses: actions/download-artifact@v4

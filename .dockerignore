@@ -1,6 +1,8 @@
 # Only the custom node source belongs in these images; local flows and credentials do not.
 **
 !Dockerfile*
+!runtime/
+!runtime/package*.json
 !src/
 !src/node-red-myatmosphere/
 !src/node-red-myatmosphere/**

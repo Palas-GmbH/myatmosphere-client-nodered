@@ -13,6 +13,10 @@ This project provides a Node-RED node `@palasde/node-red-myatmosphere` for subsc
 
 ## Installation
 
+Use Node-RED 5.0.9 or newer on a supported Node.js release; this repository qualifies
+Node 24.22.0 LTS with npm 12.2.1. Earlier Node-RED 3/4 and Node 14 images are no
+longer qualification targets.
+
 To install the Node-RED node, run the following command in your Node-RED user directory (typically `~/.node-red`):
 
 ```sh

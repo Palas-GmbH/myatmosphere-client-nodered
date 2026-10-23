@@ -1,0 +1,21 @@
+{
+  "name": "myatmosphere-client-nodered-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node $NODE_OPTIONS node_modules/node-red/red.js $FLOWS"
+  },
+  "engines": {
+    "node": "24.22.0",
+    "npm": "12.2.1"
+  },
+  "packageManager": "npm@12.2.1",
+  "dependencies": {
+    "node-red": "5.0.9"
+  },
+  "overrides": {
+    "@node-red/registry": {
+      "npm": "12.2.1"
+    }
+  }
+}

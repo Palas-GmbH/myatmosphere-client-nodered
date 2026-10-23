@@ -4,6 +4,18 @@ A Node-RED node for subscribing to real-time device measurements from MyAtmosphe
 
 ## Development
 
+All development and demo configurations use the same locked source image: Node-RED
+5.0.9, Node.js 24.22.0 LTS and npm 12.2.1. Demo now exercises this checkout's client
+instead of installing a separately published `@latest` package. Node-RED 5 is the
+sole qualification target. The obsolete Node-RED 3 startup configuration is retired;
+existing saved flow directories remain untouched.
+Back up existing Node-RED data before first starting the newer runtime. Local
+qualification uses an empty disposable user directory, never existing flows or credentials.
+
+Use `.nvmrc` and the declared package manager for host commands. The runtime lock
+also updates Node-RED's private npm CLI. npm 12.2.1 still bundles the moderate
+`GHSA-rxp7-6hxx-x8q5` advisory; do not describe the complete runtime audit as clean.
+
 Folder `scripts` contains several PowerShell scripts for running Node-RED in a docker container on the locally.
 
 Start Node-RED in development mode with installing MyAtmosphere node from `\src\node-red-myatmosphere` folder:

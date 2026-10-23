@@ -1,5 +1,15 @@
-# Use the official Node-Red Docker image as the base image
-FROM nodered/node-red:4.1.17-22-minimal@sha256:79fe8afd82f59ee1c09cd7b516ba045b6a4f49e604fcf5e1806cce7d6fdbbab5
+FROM node:24.22.0-alpine3.24@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f AS node-lts
+FROM nodered/node-red:5.0.9-24-minimal@sha256:db4067af09d4ecdf1ff1eb1cf80e3ec2ad0504c68d1d47a36c8e8b4ebb9fa055
+
+# Keep Node and both npm copies current even when the upstream image predates a patch.
+ENV PATH="/usr/local/bin:${PATH}"
+COPY --from=node-lts /usr/local/bin/node /usr/local/bin/node
+USER root
+RUN npm install --global npm@12.2.1 --cache /tmp/npm-root-cache --ignore-scripts --no-audit --no-fund \
+    && npm cache clean --cache /tmp/npm-root-cache --force
+USER node-red
+COPY --chown=node-red:node-red runtime/package*.json /usr/src/node-red/
+RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund
 
 RUN mkdir -p /usr/src/node-red/node-red-myatmosphere
 
@@ -10,13 +20,13 @@ COPY --chown=node-red:node-red src/node-red-myatmosphere/ /usr/src/node-red/node
 WORKDIR /usr/src/node-red/node-red-myatmosphere
 
 # Install dependencies for the custom node
-RUN npm ci
+RUN npm ci --ignore-scripts --no-audit --no-fund
 
 # Change working directory back to Node-Red user directory
 WORKDIR /usr/src/node-red
 
 # Install your custom node globally
-RUN npm install /usr/src/node-red/node-red-myatmosphere
+RUN npm install --package-lock=false --ignore-scripts --no-audit --no-fund /usr/src/node-red/node-red-myatmosphere
 
 # Expose the default Node-Red port
 EXPOSE 1880

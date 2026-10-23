@@ -40,10 +40,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: 24.x
+          node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
           cache: npm
           cache-dependency-path: src/node-red-myatmosphere/package-lock.json
+
+      - name: Select repository npm
+        run: npm install --global npm@12.2.1 --ignore-scripts --no-audit --no-fund
 
       - name: Verify tag matches package version
         shell: bash
@@ -80,7 +83,7 @@ jobs:
           echo "integrity=sha512-$(openssl dgst -sha512 -binary "$package_file" | openssl base64 -A)" >> "$GITHUB_OUTPUT"
 
       - name: Transfer verified package to publisher
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: node-red-package
           path: src/node-red-myatmosphere/${{ steps.package.outputs.file }}
@@ -103,11 +106,14 @@ jobs:
       - name: Set up Node.js trusted publishing
         uses: actions/setup-node@v7
         with:
-          node-version: 24.x
+          node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
 
+      - name: Select repository npm
+        run: npm install --global npm@12.2.1 --ignore-scripts --no-audit --no-fund
+
       - name: Download verified package
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: node-red-package
           path: package

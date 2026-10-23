@@ -33,9 +33,12 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: 24.x
+          node-version-file: .nvmrc
           cache: npm
           cache-dependency-path: src/node-red-myatmosphere/package-lock.json
+
+      - name: Select repository npm
+        run: npm install --global npm@12.2.1 --ignore-scripts --no-audit --no-fund
 
       - name: Install locked dependencies
         run: npm ci

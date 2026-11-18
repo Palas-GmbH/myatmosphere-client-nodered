@@ -1,5 +1,7 @@
 # @palasde/node-red-myatmosphere
 
+With the pinned Node/npm toolchain and package dependencies prepared, run `./test.ps1 ci` for the node and workflow smoke checks. `./test.ps1 all` runs package test discovery, verifies the package contents and checks the release workflow.
+
 A Node-RED node for subscribing to real-time device measurements from MyAtmosphere.
 
 ## Development
@@ -59,3 +61,7 @@ used or required by this workflow.
 ### Updating node in Node-RED library
 
 > To update an existing node, you can either resubmit it the same way as you would for a new node, or request a refresh from the node’s page on the flow library through the ‘request refresh’ link. This is only visible to logged in users.
+
+## Test logs
+
+Running `pwsh -NoProfile -File ./test.ps1 ci`, `all` or a test subset prints the path to a fresh log under `.artifacts/tests/`. Each run keeps `console.log` and `result.json`, including on failure.

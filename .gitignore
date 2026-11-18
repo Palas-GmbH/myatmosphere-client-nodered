@@ -151,3 +151,4 @@ nodered-v3-data/.config.json
 
 nodered-data-demo/flows_cred.json
 nodered-data-demo/.config.json
+/.artifacts/tests/
